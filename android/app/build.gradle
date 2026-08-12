@@ -1,0 +1,23 @@
+plugins {
+    id "com.android.application"
+}
+
+android {
+    namespace "com.niyraai.apk"
+    compileSdk 35
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    defaultConfig {
+        applicationId "com.niyraai.apk"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0.0"
+
+        def webUrl = (project.findProperty("NIYRA_WEB_URL") ?: "https://niyraai.onrender.com").toString()
+        buildConfigField "String", "NIYRA_WEB_URL", "\"${webUrl}\""
+    }
+}
