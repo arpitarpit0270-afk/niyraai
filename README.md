@@ -31,3 +31,14 @@ The included `Procfile` runs the app with Gunicorn:
 ```bash
 web: gunicorn app:app
 ```
+
+## Android APK workflow
+
+This repository includes a GitHub Actions workflow that builds a simple Android WebView APK for Niyra AI.
+
+1. Deploy the Flask app to a public HTTPS URL.
+2. Open **Actions → Build Android APK → Run workflow** in GitHub.
+3. Enter your deployed app URL in the `web_url` field.
+4. Download the `niyra-ai-debug-apk` artifact after the workflow finishes.
+
+The APK loads the deployed web app, so chat/upload features still use the Flask server and its configured `GEMINI_API_KEY`.
