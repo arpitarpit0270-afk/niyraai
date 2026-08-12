@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MAX</string>
+    <string name="accessibility_description">MAX reads visible UI elements and performs only user-requested, verified actions. Sensitive actions require confirmation.</string>
+</resources>
