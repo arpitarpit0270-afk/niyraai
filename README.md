@@ -1,44 +1,30 @@
-# Niyra AI
+# MAX — AI Personal Companion + Android Screen Automation Assistant
 
-A Hindi-first Flask AI assistant with chat, image upload, TXT/PDF summarization, and browser voice input.
+MAX is a transparent Android AI assistant prototype for Hindi, Hinglish, and English commands. It combines Jetpack Compose, a safety-first command engine, an AccessibilityService screen observer, task planning, encrypted user memory, voice/TTS hooks, and a secure-backend Gemini integration placeholder.
 
-## Local setup
+## Architecture
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-export GEMINI_API_KEY="your_google_gemini_key"
-python app.py
-```
+- **UI:** Jetpack Compose in `MainActivity.kt` with privacy disclosures, command entry, confirmation UI, and debug mode.
+- **Observe:** `MaxAccessibilityService` captures a compressed `ScreenState` containing package/activity context and visible `Element` metadata.
+- **Understand:** `NaturalLanguageEngine` handles common Hindi/Hinglish/English command families.
+- **Plan:** `TaskPlanner` creates structured multi-step `TaskPlan` instances.
+- **Act:** `ActionExecutor` uses official Android APIs and Accessibility actions only.
+- **Verify/Replan:** Every action result returns a status and the UI exposes the loop `OBSERVE → UNDERSTAND → PLAN → ACT → VERIFY → REPLAN`.
+- **Memory:** `MemoryStore` uses encrypted shared preferences and is user-controlled.
+- **AI Backend:** `GeminiBackendClient` builds requests to a backend URL. Gemini API keys must never be stored in the client.
 
-Open <http://localhost:5000>.
+## Safety rules
 
-## Environment variables
+MAX never claims to be human. It requests confirmation for messages, calls, payments, purchases, deleting data, security/system settings, sharing sensitive info, app installs, and permission grants. Low-confidence actions ask for clarification.
 
-| Variable | Required | Default | Description |
-| --- | --- | --- | --- |
-| `GEMINI_API_KEY` | Yes for AI responses | Demo mode | Google Gemini API key. |
-| `GEMINI_TEXT_MODEL` | No | `gemini-1.5-flash` | Text model for chat and summaries. |
-| `GEMINI_VISION_MODEL` | No | Same as text model | Vision-capable Gemini model for images. |
-| `MAX_UPLOAD_MB` | No | `8` | Upload size limit in MB. |
-| `PORT` | No | `5000` | Web server port. |
-
-## Deploy
-
-The included `Procfile` runs the app with Gunicorn:
+## Build
 
 ```bash
-web: gunicorn app:app
+gradle :android:app:assembleDebug
 ```
 
-## Android APK workflow
+Optional backend URL:
 
-This repository includes a GitHub Actions workflow that builds a simple Android WebView APK for Niyra AI.
-
-1. Deploy the Flask app to a public HTTPS URL.
-2. Open **Actions → Build Android APK → Run workflow** in GitHub.
-3. Enter your deployed app URL in the `web_url` field.
-4. Download the `niyra-ai-debug-apk` artifact after the workflow finishes.
-
-The APK loads the deployed web app, so chat/upload features still use the Flask server and its configured `GEMINI_API_KEY`.
+```bash
+gradle :android:app:assembleDebug -PNIYRA_BACKEND_URL=https://your-backend.example
+```
